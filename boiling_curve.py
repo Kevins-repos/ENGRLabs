@@ -37,19 +37,19 @@ def heatFluxCalc(excessTemp):
     #also rounds to nearest int
     return (f'The surface heat flux is approximately {round(y)} W/m^2')
 #ask for the excess temp
-#excessTemp = float(input('Enter the excess temperature: '))
+excessTemp = float(input('Enter the excess temperature: '))
 #call the function and print it
-#print(heatFluxCalc(excessTemp))
+print(heatFluxCalc(excessTemp))
 
 #test cases
-print(heatFluxCalc(excessTemp = 1.2))
-print(heatFluxCalc(excessTemp = 1.201))
-print(heatFluxCalc(excessTemp = '1'))
-print(heatFluxCalc(excessTemp =       33        ))
-print(heatFluxCalc(excessTemp = 1*5))
-print(heatFluxCalc(excessTemp = 1.3))
-print(heatFluxCalc(excessTemp = 5))
-print(heatFluxCalc(excessTemp = 10))
-print(heatFluxCalc(excessTemp = 30))
-print(heatFluxCalc(excessTemp = 120))
-print(heatFluxCalc(excessTemp = 1200))
+#print(heatFluxCalc(excessTemp = 1.2))
+#print(heatFluxCalc(excessTemp = 1.201))
+#print(heatFluxCalc(excessTemp = '1'))
+#print(heatFluxCalc(excessTemp =       33        ))
+#print(heatFluxCalc(excessTemp = 1*5))
+#print(heatFluxCalc(excessTemp = 1.3))
+#print(heatFluxCalc(excessTemp = 5))
+#print(heatFluxCalc(excessTemp = 10))
+#print(heatFluxCalc(excessTemp = 30))
+#print(heatFluxCalc(excessTemp = 120))
+#print(heatFluxCalc(excessTemp = 1200))
