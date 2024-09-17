@@ -10,6 +10,7 @@ points to use
 
 steps
     check first for excessTemp being within bounds
+    check for valid inputs
     if it is, go through each temp range to decide which one excessTemp belongs to and set the variables for that range
     check for free convection
         5>excessTemp>=1.3

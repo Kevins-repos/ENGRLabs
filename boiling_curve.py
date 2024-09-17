@@ -10,7 +10,7 @@
 import math
 #put this in a function to use return for test cases
 def heatFluxCalc(excessTemp):
-    #check for non int values
+    #check for non int values and other errors not accounted for
     try:
         #out of bounds not inclusive so only valid values are calculated
         if(excessTemp<1.3 or excessTemp>1200):
