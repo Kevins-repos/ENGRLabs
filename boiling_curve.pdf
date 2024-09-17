@@ -24,7 +24,7 @@ steps
     check for film
         1200>=excessTemp>=120
             set variables for this range x1, x0, y1, y0 = 1200, 120, 1.5*10**6, 2.5*10**4
-    calculate the surface heat flux 
+    compute surface heat flux 
 test cases
     out of bounds
         excessTemp = 1.2
