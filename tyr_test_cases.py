@@ -85,3 +85,33 @@ sex:M age:49 cho:200 smo:Y hdl:60 sbp:119 med:N out:<1
 sex:M age:59 cho:240 smo:Y hdl:60 sbp:119 med:N out:<1
 sex:M age:69 cho:280 smo:Y hdl:60 sbp:119 med:N out:<1
 sex:M age:79 cho:290 smo:Y hdl:60 sbp:119 med:N out:<1
+
+sex:F age:0 cho:0 smo:N hdl:0 sbp:0 med:N out:<1
+sex:M age:100 cho:400 smo:Y hdl:100 sbp:200 med:Y out:1
+
+sex:F age:30 cho:150 smo:Y hdl:30 sbp:110 med:N out:<1
+sex:M age:70 cho:250 smo:N hdl:70 sbp:150 med:Y out:1
+
+sex:F age:25 cho:180 smo:N hdl:55 sbp:115 med:Y out:2
+sex:M age:55 cho:220 smo:Y hdl:45 sbp:135 med:N out:1
+
+sex:F age:0 cho:0 smo:N hdl:0 sbp:0 med:N out:<1
+sex:M age:-1 cho:-1 smo:N hdl:-1 sbp:-1 med:N out:<1
+
+sex:F age:45 cho:300 smo:Y hdl:20 sbp:180 med:Y out:1
+sex:M age:35 cho:120 smo:N hdl:80 sbp:90 med:N out:<1
+
+sex:F age:1 cho:100 smo:N hdl:60 sbp:100 med:N out:<1
+sex:M age:99 cho:300 smo:Y hdl:40 sbp:180 med:Y out:1
+
+sex:F age:50 cho:50 smo:N hdl:60 sbp:120 med:N out:<1
+sex:M age:50 cho:350 smo:Y hdl:60 sbp:120 med:Y out:1
+
+sex:F age:50 cho:200 smo:N hdl:20 sbp:120 med:N out:<1
+sex:M age:50 cho:200 smo:Y hdl:100 sbp:120 med:Y out:1
+
+sex:F age:50 cho:200 smo:N hdl:60 sbp:80 med:N out:<1
+sex:M age:50 cho:200 smo:Y hdl:60 sbp:200 med:Y out:1
+
+sex:F age:25 cho:300 smo:Y hdl:20 sbp:180 med:Y out:1
+sex:M age:75 cho:100 smo:N hdl:100 sbp:90 med:N out:<1
