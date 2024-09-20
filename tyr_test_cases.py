@@ -138,4 +138,3 @@ sex:F age:99 cho:0 smo:Y hdl:20 sbp:180 med:Y out:1
 sex:M age:99 cho:199 smo:Y hdl:20 sbp:180 med:Y out:1
 sex:M age:99 cho:200 smo:N hdl:100 sbp:90 med:N out:<1
 sex:F age:99 cho:250 smo:N hdl:100 sbp:90 med:N out:<1
-
