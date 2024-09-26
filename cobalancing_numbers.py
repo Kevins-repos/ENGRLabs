@@ -7,7 +7,6 @@
 # Assignment:   6.20 LAB: Co-balancing numbers
 # Date:         25 9 2024
 
-import math
 #start
 n = int(input('Enter a value for n: '))
 r = 1
