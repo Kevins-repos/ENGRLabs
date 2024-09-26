@@ -1,21 +1,21 @@
-import math
+fullName = input('What is your name? ').strip()
 
-def juggler_sequence(n):
-    sequence = [n]
-    while n != 1:
-        if n % 2 == 0:
-            n = math.floor(math.sqrt(n))
-        else:
-            n = math.floor(n ** 1.5)
-        sequence.append(n)
-    return sequence
+def firstSyllable(fullName):
+    vowels = 'aeiou'
+    first_vowel_index = -1
+    second_vowel_index = -1
+    
+    for i, char in enumerate(fullName.lower()):
+        if char in vowels:
+            if first_vowel_index == -1:
+                first_vowel_index = i
+            elif second_vowel_index == -1:
+                second_vowel_index = i
+                break
+    
+    if first_vowel_index != -1 and second_vowel_index != -1:
+        return fullName[first_vowel_index:second_vowel_index + 1]
+    else:
+        return "Not enough vowels"
 
-def main():
-    n = int(input("Enter a positive integer: "))
-    sequence = juggler_sequence(n)
-    print(f"The Juggler sequence starting at {n} is:")
-    print(", ".join(map(str, sequence)))
-    print(f"It took {len(sequence) - 1} iterations to reach 1")
-
-if __name__ == "__main__":
-    main()
+print(firstSyllable(fullName))
