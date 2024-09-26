@@ -17,5 +17,5 @@ while n!=1:
     else:
         n=math.floor(n**1.5)
     nums.append(n)
-print(nums)
-print(f'It took {len(nums)} iterations to reach 1')
+print(', '.join(map(str, nums)))
+print(f'It took {len(nums)-1} iterations to reach 1')
