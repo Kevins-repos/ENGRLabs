@@ -4,7 +4,7 @@
 #
 # Name:         Kevin Alcantara
 # Section:      578
-# Assignment:   6.19 LAB: Juggler sequence
+# Assignment:   6.20 LAB: Co-balancing numbers
 # Date:         25 9 2024
 
 import math
