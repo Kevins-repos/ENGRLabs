@@ -1,6 +1,6 @@
 row = ['.', '.', '.', '.', '.', '.', '.', '.', '.']#set up row that will be copied for every column
 board = [row.copy() for i in row]#set up row copies and make the board
-p1Turn = True#player 1 goes first
+p1Turn = True#player 1 goes first, white dot
 gameEnd = False#ensure the game has a future
 moves = 0#ensure the games future isnt short
 #all of these functions are made because without them the code will be all the way to the right side becauss of all the loops
@@ -22,18 +22,20 @@ def removeSurroundedPieces(board, player):
 def placeRock(board, location, p1Turn):
     if board[location[0]][location[1]] == '.':
         if p1Turn:
-            board[location[0]][location[1]] = chr(9675)  # White circle
+            board[location[0]][location[1]] = chr(9675)#Black circle
         else:
-            board[location[0]][location[1]] = chr(9679)  # Black circle
+            board[location[0]][location[1]] = chr(9679)#White circle
         removeSurroundedPieces(board, chr(9675) if p1Turn else chr(9679))
-        return not p1Turn  # Toggle the turn
+        p1Turn = not p1Turn#Toggle the turn and print whos turn
+        print(f"{'Black' if p1Turn else 'White'}'s turn")  # Print whose turn it is
+        return p1Turn
     print("Spot taken, go again.")
-    return p1Turn  # If the spot is taken, the turn doesn't change
+    return p1Turn#If the spot is taken, the turn doesn't change
 
 def printBoard(board):
-    print("  1 2 3 4 5 6 7 8 9")  # Print column numbers
+    print("  1 2 3 4 5 6 7 8 9")#Print column numbers
     for i in range(9):
-        print(f"{i+1} ", end='')  # Print row numbers
+        print(f"{i+1} ", end='')#Print row numbers
         for j in range(9):
             print(f'{board[i][j]} ', end='')
         print()
@@ -42,18 +44,22 @@ while not gameEnd and moves <81:
     printBoard(board)
     try:
         location = [int(i)-1 for i in input('Enter where you would put the stone as a list. Ex: 1, 9 for row 1 column 9: ').strip().split()]#clear spaces,split into array,turn into correct location
-    except ValueError:#was meant to handle 'quit' but instead handles anything not numbers
+    except ValueError:#Was meant to handle 'quit' but instead handles anything not numbers
         print("Ended early")
         break
-    p1Turn = placeRock(board, location, p1Turn)
+    try:
+        p1Turn = placeRock(board, location, p1Turn)
+    except IndexError:
+        print('Please keep the rock WITHIN the board')
+        continue
     moves += 1
     white_count = sum(row.count(chr(9675)) for row in board)
     black_count = sum(row.count(chr(9679)) for row in board)
-    if moves == 81:  # Board is full if no pieces were taken, still end here cause nobody would actually play a full session here
-        gameEnd = True#end the game next time this loop runs
-        if white_count > black_count:
+    if moves == 81:#Board is full if no pieces were taken, still end here cause nobody would actually play a full session here
+        gameEnd = True#end the game and check who won
+        if white_count > black_count or black_count == 0:
             print("White wins!")
-        elif black_count > white_count:
+        elif black_count > white_count or white_count == 0:
             print("Black wins!")
         else:
             print("It's a tie!")
