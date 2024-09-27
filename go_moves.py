@@ -4,9 +4,9 @@ p1Turn = True#player 1 goes first, white dot
 gameEnd = False#ensure the game has a future
 moves = 0#ensure the games future isnt short
 #all of these functions are made because without them the code will be all the way to the right side becauss of all the loops
-def isSurrounded(board, x, y, player):#piece location and who it belongs to
+def isSurrounded(board, x, y, player):#piece location and who it belongs to, still not 100% sure how this works but it does so good job everyone
     opponent = chr(9675) if player == chr(9679) else chr(9679)
-    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]#set up possible directions to check, 
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]#set up possible directions to check, up down left right respectively
     for dx, dy in directions:
         nx, ny = x + dx, y + dy
         if 0 <= nx < 9 and 0 <= ny < 9 and board[nx][ny] != opponent:#check if the direction is within the board and if any piece around is friendly
