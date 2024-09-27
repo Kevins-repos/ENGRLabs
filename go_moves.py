@@ -43,7 +43,7 @@ def printBoard(board):
 while not gameEnd and moves <81:
     printBoard(board)
     try:
-        location = [int(i)-1 for i in input('Enter where you would put the stone as a list. Ex: 1, 9 for row 1 column 9: ').strip().split()]#clear spaces,split into array,turn into correct location
+        location = [int(i)-1 for i in input('Enter where you would put the stone as a list. Ex: "1 9" for row 1 column 9: ').strip().split()]#clear spaces,split into array,turn into correct location
     except ValueError:#Was meant to handle 'quit' but instead handles anything not numbers
         print("Ended early")
         break
