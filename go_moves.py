@@ -1,3 +1,22 @@
+# By submitting this assignment, I agree to the following:
+#   "Aggies do not lie, cheat, or steal, or tolerate those who do."
+#   "I have not given or received any unauthorized aid on this assignment."
+#
+# Names:        Max Maizus
+#               Kevin Alcantara
+#               Rebbeca Eason
+#               Miranda Yang
+# Section:      578
+# Assignment:   LAB: Topic 7 (team)
+# Date:         26 9 2024
+
+#colors :)
+begin = '\x1b[1m'
+end = '\x1b[39m\x1b[22m'
+red = '\x1b[31m'
+blue = '\x1b[34m'
+green = '\x1b[32m'
+
 row = ['.', '.', '.', '.', '.', '.', '.', '.', '.']#set up row that will be copied for every column
 board = [row.copy() for i in row]#set up row copies and make the board
 p1Turn = True#player 1 goes first, white dot
@@ -27,15 +46,15 @@ def placeRock(board, location, p1Turn):
             board[location[0]][location[1]] = chr(9679)#White circle
         removeSurroundedPieces(board, chr(9675) if p1Turn else chr(9679))
         p1Turn = not p1Turn#Toggle the turn and print whos turn
-        print(f"{'Black' if p1Turn else 'White'}'s turn")  # Print whose turn it is
+        print(f'{'Black' if p1Turn else 'White'}\'s turn')  # Print whose turn it is
         return p1Turn
-    print("Spot taken, go again.")
+    print(begin + red + 'Spot taken, go again.' + end)
     return p1Turn#If the spot is taken, the turn doesn't change
 
 def printBoard(board):
-    print("  1 2 3 4 5 6 7 8 9")#Print column numbers
+    print('  1 2 3 4 5 6 7 8 9')#Print column numbers
     for i in range(9):
-        print(f"{i+1} ", end='')#Print row numbers
+        print(f'{i+1} ', end='')#Print row numbers
         for j in range(9):
             print(f'{board[i][j]} ', end='')
         print()
@@ -45,12 +64,12 @@ while not gameEnd and moves <81:
     try:
         location = [int(i)-1 for i in input('Enter where you would put the stone as a list. Ex: "1 9" for row 1 column 9: ').strip().split()]#clear spaces,split into array,turn into correct location
     except ValueError:#Was meant to handle 'quit' but instead handles anything not numbers
-        print("Ended early")
+        print(begin + blue + 'Ended early' + end)
         break
     try:
         p1Turn = placeRock(board, location, p1Turn)
     except IndexError:
-        print('Please keep the rock WITHIN the board')
+        print(begin + red + 'Please keep the rock WITHIN the board' + end)
         continue
     moves += 1
     white_count = sum(row.count(chr(9675)) for row in board)
@@ -58,10 +77,10 @@ while not gameEnd and moves <81:
     if moves == 81:#Board is full if no pieces were taken, still end here cause nobody would actually play a full session here
         gameEnd = True#end the game and check who won
         if white_count > black_count or black_count == 0:
-            print("White wins!")
+            print(begin + green + 'White wins!' + end)
         elif black_count > white_count or white_count == 0:
-            print("Black wins!")
+            print(begin + green + 'Black wins!' + end)
         else:
-            print("It's a tie!")
+            print(begin + blue + 'It\'s a tie!' + end)
 
-print("Game Over!")
+print(begin + red + 'Game Over!' + end)
