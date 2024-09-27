@@ -32,19 +32,19 @@ def isSurrounded(board, x, y, player):#piece location and who it belongs to, sti
             return False#there was a friendly piece around or surround check wasnt within boundary
     return True
 
-def removeSurroundedPieces(board, player):
+def removeSurroundedPieces(board, player):#player variable checks whos turn it is by checking their rock, p1Turn is constant with player
     for i in range(9):
         for j in range(9):
             if board[i][j] == player and isSurrounded(board, i, j, player):#go through each piece and check if its surrounded
                 board[i][j] = '.'#surrounded so revert to empty 
 
 def placeRock(board, location, p1Turn):
-    if board[location[0]][location[1]] == '.':
-        if p1Turn:
+    if board[location[0]][location[1]] == '.':#if the location where i want to place a rock is empty
+        if p1Turn:#whos turn it is and place their rock at this location
             board[location[0]][location[1]] = chr(9675)#Black circle
         else:
             board[location[0]][location[1]] = chr(9679)#White circle
-        removeSurroundedPieces(board, chr(9675) if p1Turn else chr(9679))
+        removeSurroundedPieces(board, chr(9675) if p1Turn else chr(9679))#if its surrounded, remove it immediately
         p1Turn = not p1Turn#Toggle the turn and print whos turn
         print(f'{'Black' if p1Turn else 'White'}\'s turn')  # Print whose turn it is
         return p1Turn
@@ -59,7 +59,7 @@ def printBoard(board):
             print(f'{board[i][j]} ', end='')
         print()
 
-while not gameEnd and moves <81:
+while not gameEnd and moves <80:
     printBoard(board)
     try:
         location = [int(i)-1 for i in input('Enter where you would put the stone as a list. Ex: "1 9" for row 1 column 9: ').strip().split()]#clear spaces,split into array,turn into correct location
