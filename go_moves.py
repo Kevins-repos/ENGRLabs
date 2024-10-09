@@ -39,6 +39,8 @@ def removeSurroundedPieces(board, player):#player variable checks whos turn it i
                 board[i][j] = '.'#surrounded so revert to empty 
 
 def placeRock(board, location, p1Turn):
+    if location[0] ==-1 or location[1] ==-1:
+        location[0], location[1] = 10, 10
     if board[location[0]][location[1]] == '.':#if the location where i want to place a rock is empty
         if p1Turn:#whos turn it is and place their rock at this location
             board[location[0]][location[1]] = chr(9675)#Black circle
