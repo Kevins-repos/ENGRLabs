@@ -14,7 +14,7 @@ def asciiTime(symbol: str, hour: int, minute: int):
         if char==' \n:\n \n:\n ':
             if len(time[i+1:])<=1:
                 time.insert(i+1, nums[0])
-    lines = ['' for _ in range(5)]
+    lines = ['' for i in range(5)]
     for digit in time:
         digit_lines = digit.split('\n')
         for i in range(5):
