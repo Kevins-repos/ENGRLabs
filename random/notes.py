@@ -10,7 +10,10 @@ def asciiTime(symbol: str, hour: int, minute: int):
     for i, char in enumerate(nums):
         nums[i] = char.replace('*', symbol)#char = nums[i], im just making sure 
     time = [nums[i] for i in [int(i) for i in str(hour)]] + [' \n:\n \n:\n '] + [nums[i] for i in [int(i) for i in str(minute)]]#split into list, turn int into ascii art, combine both lists
-    
+    for i,char in enumerate(time):#in this loop, add a 0 art if needed
+        if char==' \n:\n \n:\n ':
+            if len(time[i+1:])<=1:
+                time.insert(i+1, nums[0])
     # Split each digit's ASCII art into lines
     lines = ['' for _ in range(5)]#create 5 lines to be printee verically
     for digit in time:#each element in time, as in, each ascii art for each number 
@@ -22,4 +25,4 @@ def asciiTime(symbol: str, hour: int, minute: int):
     for line in lines:
         print(line)
 
-asciiTime('o', 48, 90)
+asciiTime('o', 2, 999)
