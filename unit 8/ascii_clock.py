@@ -1,13 +1,13 @@
 def asciiTime(symbol: str, hour: int, minute: int):
     """Enter the symbol, hour, and minute numbers and prints the ascii art of them with the symbol\n
-    Doesnt handle leaving any of the 3 variables empty so dont, this also doesnt return anything so\n
-    keep that in mind when using this inside print"""
+    Doesnt handle leaving any of the 3 variables empty so dont, this return a list that when printed\n
+    line by line, shows the art, i did this so that there would be a way to add AM or PM to the end\n
+    meaning that you will have to write AM line by line top to bottom and append it to this fucntion\n
+    If you need help i know what to do"""
     nums = ['***\n* *\n* *\n* *\n***', ' * \n** \n * \n * \n***', '***\n  *\n***\n*  \n***',
             '***\n  *\n***\n  *\n***', '* *\n* *\n***\n  *\n  *', '***\n*  \n***\n  *\n***', 
             '***\n*  \n***\n* *\n***', '***\n  *\n  *\n  *\n  *', '***\n* *\n***\n* *\n***',
             '***\n* *\n***\n  *\n  *']
-    AmPm = [' A  M   M\nA A MM MM\nAAA M M M\nA A M   M\nA A M   M',
-            'PPP M   M\nP P MM MM\nPPP M M M\nP   M   M\nP   M   M']
     allowed = 'abcdeghkmnopqrsuvwxyz@$&*='
     while str(symbol) not in allowed:
         symbol = input('Character not permitted! Try again: ')
@@ -23,5 +23,4 @@ def asciiTime(symbol: str, hour: int, minute: int):
         digit_lines = digit.split('\n')
         for i in range(5):
             lines[i] += digit_lines[i] + ' '
-    for line in lines:
-        print(line)
+    return [line for line in lines]
