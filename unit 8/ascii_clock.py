@@ -1,9 +1,13 @@
 def asciiTime(symbol: str, hour: int, minute: int):
-    """Enter a symbol and returns a list with all ascii numbers in that symbol"""
+    """Enter the symbol, hour, and minute numbers and prints the ascii art of them with the symbol\n
+    Doesnt handle leaving any of the 3 variables empty so dont, this also doesnt return anything so\n
+    keep that in mind when using this inside print"""
     nums = ['***\n* *\n* *\n* *\n***', ' * \n** \n * \n * \n***', '***\n  *\n***\n*  \n***',
             '***\n  *\n***\n  *\n***', '* *\n* *\n***\n  *\n  *', '***\n*  \n***\n  *\n***', 
             '***\n*  \n***\n* *\n***', '***\n  *\n  *\n  *\n  *', '***\n* *\n***\n* *\n***',
             '***\n* *\n***\n  *\n  *']
+    AmPm = [' A  M   M\nA A MM MM\nAAA M M M\nA A M   M\nA A M   M',
+            'PPP M   M\nP P MM MM\nPPP M M M\nP   M   M\nP   M   M']
     allowed = 'abcdeghkmnopqrsuvwxyz@$&*='
     while str(symbol) not in allowed:
         symbol = input('Character not permitted! Try again: ')
@@ -18,6 +22,6 @@ def asciiTime(symbol: str, hour: int, minute: int):
     for digit in time:
         digit_lines = digit.split('\n')
         for i in range(5):
-            lines[i] += digit_lines[i] + '  '
+            lines[i] += digit_lines[i] + ' '
     for line in lines:
         print(line)
