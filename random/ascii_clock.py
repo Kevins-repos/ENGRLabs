@@ -1,3 +1,14 @@
+# By submitting this assignment, I agree to the following:
+#   "Aggies do not lie, cheat, or steal, or tolerate those who do."
+#   "I have not given or received any unauthorized aid on this assignment."
+#
+# Names:        Max Maizus
+#               Kevin Alcantara
+#               Rebbeca Eason
+#               Miranda Yang
+# Section:      578
+# Assignment:   8.17 LAB: ASCII clock
+# Date:         12 10 2024
 def asciiTime(hour: int, minute: int, symbol: str):
     
     """Enter the symbol, hour, and minute numbers and prints the ascii art of them with the symbol\n
@@ -34,20 +45,25 @@ AmPm = [' A  M   M\nA A MM MM\nAAA M M M\nA A M   M\nA A M   M',
 time = [int(i) for i in input('Enter the time: ').strip().split(':')]
 typeIs12 = True if int(input('Choose the clock type (12 or 24): '))==12 else False
 symbol = input('Enter your preferred character: ')
-if time[0]>=12 and typeIs12==True:
+if time[0]>=12 and typeIs12==True:#afternoon code
     day, time[0]= AmPm[1].split('\n'),  time[0]-12
     asciiArt = asciiTime(time[0], time[1], symbol) 
+    print()
     for i,char in enumerate(day):
         asciiArt[i]+=char
-        print(asciiArt[i])
-elif typeIs12==True:
+        print(asciiArt[i].rstrip())
+elif typeIs12==True:#morning code
+    if time[0] == 0:
+        time[0]=12
     day = AmPm[0].split('\n')
     asciiArt = asciiTime(time[0], time[1], symbol) 
+    print()
     for i,char in enumerate(day):
         asciiArt[i]+=char
-        print(asciiArt[i])
-else:
-    asciiArt = asciiTime(time[0], time[1], symbol) 
+        print(asciiArt[i].rstrip())
+else:#24 format code
+    asciiArt = asciiTime(time[0], time[1], symbol)
+    print()
     for i in asciiArt:
-        print(i)
+        print(i.rstrip())
 
