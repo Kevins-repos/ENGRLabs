@@ -6,6 +6,9 @@
 # Section:      578
 # Assignment:   8.18.1: LAB: Leet speak
 # Date:         12 10 2024
-
-
-print(input('Enter some text: ').lower().replace('a', '4').replace('e', '3').replace('o', '0').replace('s', '5').replace('t', '7'))
+#comment
+text = input('Enter some text: ')
+hold, changed = text.lower(), {'a': '4', 'e': '3', 'o': '0', 's': '5', 't': '7'}
+for letters in changed:
+    hold = hold.replace(letters, changed[letters])
+print(f'In leet speak, "{text}" is:\n{hold}')
