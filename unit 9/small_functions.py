@@ -6,7 +6,6 @@
 # Section:      578
 # Assignment:   8.18.1: LAB: Leet speak
 # Date:         12 10 2024
-#comment
 import math
 def parta(sphere_radius: float, cylinder_radius: float):
     sphere_volume = 4/3*math.pi*sphere_radius**3
@@ -15,9 +14,33 @@ def parta(sphere_radius: float, cylinder_radius: float):
 #n = 4, 2 + 2 = 4; n= 9, 2+2+2+2+2, 3+3+3;
 def partb(n:int):
     out = []
-    for i in range(2, n+2):
-        print(n**(1/i))
-        if n**(1/i)%1==0:
-            out.append(i)
-    return out*out[0] if out != [] else False
-print(partb(6))
+    for i in range(2, n):
+        for j in range(2, n):
+            print(f'{i} * {j} = {i*j}')
+            if i*j>n:
+                break
+            if i*j==n:
+                out.append(i)
+                return out*j
+    return False
+def partc(symbol: str, name: str, company: str, email: str):
+    businessCard = symbol*26
+    name = symbol+name.center(len(businessCard)-2)+symbol
+    company = symbol+company.center(len(businessCard)-2)+symbol
+    email = symbol+email.center(len(businessCard)-2)+symbol
+    return (f'{businessCard}\n{name}\n{company}\n{email}\n{businessCard}')
+def partd(numList: list):
+    numList.sort()
+    return numList[0], numList[(len(numList))//2] if len(numList)%2!=0 else (numList[len(numList)//2-1]+numList[len(numList)//2])/2,  numList[len(numList)-1]
+def parte(times: list, distances: list):
+    velocities = [0]*(len(times)-1)
+    for index, time in enumerate(times):
+        velocities[index-1] = (distances[index]-distances[index-1])/(times[index]-times[index-1])
+    return velocities
+def partf(numList: list):
+    for char, i in enumerate(numList):
+        for character, j in enumerate(numList):
+            print(i,j)
+            if char!=character and i+j==2028:
+                return i*j
+    return False
