@@ -6,26 +6,16 @@
 # Section:      578
 # Assignment:   8.18.1: LAB: Leet speak
 # Date:         12 10 2024
-import math
 #area of a cylinder with a hole?
 import math
-
-import math
-
-import math
-
-def parta(sphere_radius: float, cylinder_radius: float):
-    sphere_volume = 4/3*math.pi*sphere_radius**3
-    cylinder_volume=math.pi*cylinder_radius**2*(2*sphere_radius)
-    return sphere_volume-cylinder_volume-(3.802293-sphere_volume-cylinder_volume)
-# Example usage
-R = 1  # sphere radius
-r = 0.25  # cylinder radius
-print(parta(R, r))
-
-# Example function and bounds
-def f(x):
-    return x  
+#headache
+def parta(radius_sphere, radius_hole):
+    height_cap = radius_sphere - math.sqrt(radius_sphere**2 - radius_hole**2)
+    volume_caps = 2 * ((math.pi * height_cap**2) * (3*radius_sphere - height_cap)) / 3
+    volume_cylinder = math.pi * radius_hole**2 * (2 * math.sqrt(radius_sphere**2 - radius_hole**2))
+    volume_sphere = (4/3) * math.pi * radius_sphere**3
+    volume_bead = volume_sphere - volume_caps - volume_cylinder
+    return round(volume_bead, 6)
 #had to restart this because of misunderstanding
 def partb(n:int):
     even = [i for i in range(2, n, 2)]
@@ -61,4 +51,4 @@ def partf(numList: list):
     return False
 #part g cause this is enough code
 def partg(x, tol):
-    return False
+    return float
