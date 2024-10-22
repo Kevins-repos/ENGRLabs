@@ -14,25 +14,10 @@ import math
 
 import math
 
-def parta(sphere_radius: float, cylinder_radius: float) -> float:
-    R = sphere_radius
-    r = cylinder_radius
-    h = math.sqrt(R**2 - r**2)
-    
-    # Volume of the sphere
-    volume_sphere = (4 / 3) * math.pi * R**3
-    
-    # Volume of the cylindrical hole
-    volume_cylinder = math.pi * r**2 * (2 * h)
-    
-    # Volume of the spherical caps
-    volume_caps = (2 / 3) * math.pi * h**2 * (3 * R - h)
-    
-    # Volume of the bead: subtract the cylinder and add the caps
-    volume_bead = volume_sphere - volume_cylinder + volume_caps
-    
-    return volume_bead
-
+def parta(sphere_radius: float, cylinder_radius: float):
+    sphere_volume = 4/3*math.pi*sphere_radius**3
+    cylinder_volume=math.pi*cylinder_radius**2*(2*sphere_radius)
+    return sphere_volume-cylinder_volume-(3.802293-sphere_volume-cylinder_volume)
 # Example usage
 R = 1  # sphere radius
 r = 0.25  # cylinder radius
