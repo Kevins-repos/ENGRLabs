@@ -8,4 +8,3 @@
 # Date:         29 10 2024
 #comment
 import csv
-
