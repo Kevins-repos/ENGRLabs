@@ -23,9 +23,10 @@ try:
     fileOut = open(file='valid_passports.txt', mode= 'x+')
 except FileExistsError:
     fileOut = open(file='valid_passports.txt', mode= 'r+')
+    fileOut.truncate()
 results = placeAndSortInList(allPassports)
 for i in results[0]:
-    if i[0] == 'valid' and i != '':
+    if 'valid' in i:
         fileOut.write(' '.join(i[1:]))
         fileOut.write('\n')
 print('There are', results[1], 'valid passports')
