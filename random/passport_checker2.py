@@ -19,7 +19,6 @@ try:
 except FileExistsError:
     fileOut = open(file='valid_passports.txt', mode= 'r+')
     fileOut.truncate()
-
 def validFields(file):
     check, count = '', 0
     for row in allPassports:
@@ -36,7 +35,11 @@ def validFields(file):
             count+=1
     return count
 print('There are', validFields(allPassports), 'valid passports')
-
+try:
+    file2Out = open(file='valid_passports2.txt', mode= 'x+')
+except:
+    file2Out = open(file='valid_passports2.txt', mode= 'r+')
+    file2Out.truncate()
 def validValues(validFile):
     validFile = open(validFile, 'r+')
     check, compare = '', ''
@@ -105,8 +108,10 @@ def validValues(validFile):
                         valid = False
                         break
             if valid:
-                print(check)
+                file2Out.write(check + '\n')
             check = ''
             
     
 validValues('valid_passports.txt')
+fileOut.close()
+file2Out.close()
