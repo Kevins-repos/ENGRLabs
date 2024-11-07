@@ -1,3 +1,16 @@
+# By submitting this assignment, I agree to the following:
+#   "Aggies do not lie, cheat, or steal, or tolerate those who do."
+#   "I have not given or received any unauthorized aid on this assignment."
+#
+# Names:       Maximus Maizus
+#              Miranda Yang
+#              Kevin Alcantara 
+#              Rebecca Eason
+
+# Section:     578
+# Assignment:  11.9.1: LAB: Passport checker Part A
+# Date:        11/6/24
+#comment
 fileName = input('Enter the name of the file: ')
 allPassports = open(fileName, 'r').readlines()
 try:
@@ -5,16 +18,17 @@ try:
 except FileExistsError:
     fileOut = open(file='valid_passports.txt', mode= 'r+')
     fileOut.truncate()
-index, check, count = 0, '', 0
-while index < len(allPassports):
-    for row in allPassports:
-        if row != '\n':
-            check += row
-        else:
-            if 'byr' in check and 'pid' in check and 'iyr' in check and 'cid' in check and 'eyr' in check and 'hcl' in check and 'ecl' in check and 'hgt' in check:
-                fileOut.write(check)
-                fileOut.write('\n')
-                count += 1
-            index += 1
-            check = ''
+check, count = '', 0
+for row in allPassports:
+    if row.strip():
+        check += row
+    else:
+        if all(fields in check for fields in ['pid', 'cid', 'hgt', 'hcl', 'eyr', 'byr', 'ecl']):
+            fileOut.write(check + '\n')
+            count += 1
+        check = ''
+if check:
+    if all(fields in check for fields in ['pid', 'cid', 'hgt', 'hcl', 'eyr', 'byr', 'ecl']):
+        fileOut.write(check)
+        count+=1
 print('There are', count, 'valid passports')
