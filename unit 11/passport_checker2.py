@@ -12,8 +12,6 @@
 #
 
 ##comment for grade
-# YOUR CODE HERE
-#
 import re
 
 # Define the required fields and optional fields
