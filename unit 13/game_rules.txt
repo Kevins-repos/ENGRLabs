@@ -1,0 +1,19 @@
+Here are the instructions for playing the board game Ludo:
+*****Setup*****
+2–4 players choose a color and place their four tokens in the corresponding starting area.
+*****Gameplay*****
+Players take turns rolling a die to move their tokens around the board clockwise:
+    Rolling a six: A player can move one token out of the starting area and onto the board. They also get an extra roll.
+    Moving tokens: The number on the die determines how many spaces a token can move.
+    Landing on an opponent's token: The opponent's token is sent back to the starting area.
+    Landing on your own token: The tokens form a block, making them safe from opponents.
+    Reaching the home column: A player must use an exact roll to move a token into their home column.
+    Winning: The first player to move all four tokens into their home column wins. 
+*****Here are some tips for playing Ludo:*****
+    Be patient. 
+    Position your tokens strategically. 
+    Unlock all your pawns. 
+    Distribute your pawns strategically across the board. 
+    Avoid placing two tokens on the same safe points. 
+    Don't race a single token alone. 
+    Keep your idle tokens on safe points. 
