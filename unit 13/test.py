@@ -1,153 +1,176 @@
-import tkinter as tk
-import random
+import numpy as np
 
-class LudoGame:
-    def __init__(self, master):
-        self.master = master
-        self.master.title("Ludo Game")
+def gameHelp() -> None:
+    print(open('unit 13/game_rules.txt', 'r').read())
 
-        # Canvas for the board
-        self.canvas = tk.Canvas(self.master, width=600, height=600, bg='white')
-        self.canvas.pack()
+def setPlayers() -> dict:
+    players_pieces = {'red': [], 'blue': [], 'green': [], 'yellow': []}
+    while True:
+        try:
+            playerCount = int(input('How many players are playing (2-4): '))
+            if 2 <= playerCount <= 4:
+                colors = ['red', 'blue', 'green', 'yellow']
+                for i in range(playerCount):
+                    players_pieces[colors[i]] = [f'piece{j}' for j in range(1, 5)]
+                return {color: pieces for color, pieces in players_pieces.items() if pieces}
+            else:
+                print('Only 2-4 players can play at a time. Please try again.')
+        except ValueError:
+            print('Invalid input. Please enter a number between 2 and 4.')
 
-        # Initialize the grid
-        self.grid = self.create_grid()
+def losePiece(color: str) -> None:
+    global players
+    if len(players[color]) > 0:
+        players[color].pop()
+        print(f'{color.capitalize()} player now has {len(players[color])} pieces left')
 
-        # Draw the board
-        self.draw_board()
+        if len(players[color]) == 0:
+            print(f'{color.capitalize()} has been eliminated')
+            players.pop(color)
 
-        # Players, positions, and paths
-        self.players = ['red', 'blue', 'green', 'yellow']
-        self.current_player_index = 0  # Track current player
-        self.positions = {player: {} for player in self.players}  # Track piece positions on grid
-        self.pieces = self.init_pieces()  # Initialize player pieces
-        self.paths = self.create_paths()  # Define paths for all players
+def nextTurn(current_turn) -> str:
+    colors = list(players.keys())
+    idx = (colors.index(current_turn) + 1) % len(colors)
+    return colors[idx]
 
-        # Dice roll button
-        self.roll_button = tk.Button(self.master, text="Roll Dice", command=self.roll_dice)
-        self.roll_button.pack(pady=10)
+def createBoard():
+    line3 = ['O', '.', 'O', '.', 'O', '.', 'O', '.', '.', '.', 'O', '.', 'O', '.', 'O', '.', 'O']
+    line1 = ['O', 'O', 'O', 'O', 'O', 'O', 'O', '.', '.', '.', 'O', 'O', 'O', 'O', 'O', 'O', 'O']
+    line2 = ['O', '.', '.', '.', '.', '.', 'O', '.', '.', '.', 'O', '.', '.', '.', '.', '.', 'O']
+    line4 = ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.']
+    board = []
+    board.append(line1.copy())
+    board.append(line2.copy())
+    board.append(line3.copy())
+    board.append(line2.copy())
+    board.append(line3.copy())
+    board.append(line2.copy())
+    board.append(line1.copy())
+    board.append(line4.copy())
+    board.append(line4.copy())
+    board.append(line4.copy())
+    board.append(line1.copy())
+    board.append(line2.copy())
+    board.append(line3.copy())
+    board.append(line2.copy())
+    board.append(line3.copy())
+    board.append(line2.copy())
+    board.append(line1.copy())
+    return board
 
-        # Dice result display
-        self.dice_label = tk.Label(self.master, text="Dice Roll: ")
-        self.dice_label.pack()
+def showBoard(board):
+    print('O - - - - - - - - - - - - - - - - - O')
+    for row in board:
+        print('|', end=' ')
+        for char in row:
+            print(char, end=' ')
+        print('|', end=' ')
+        print()
+    print('O - - - - - - - - - - - - - - - - - O')
 
-        # Turn display
-        self.turn_label = tk.Label(self.master, text=f"{self.players[self.current_player_index]}'s Turn")
-        self.turn_label.pack()
+def placePlayers(players, board: list):
+    placements = {'green': [(2, 2), (2, 4), (4, 2), (4, 4), 'g'],
+                  'yellow': [(2, 12), (2, 14), (4, 12), (4, 14), 'y'],
+                  'red': [(12, 2), (12, 4), (14, 2), (14, 4), 'r'],
+                  'blue': [(12, 12), (12, 14), (14, 12), (14, 14), 'b']}
+    for color in players.keys():
+        for i in range(len(players[color])):
+            board[placements[color][i][0]][placements[color][i][1]] = placements[color][-1]
 
-        # State tracking for turn and dice
-        self.dragged_piece = None
-        self.dice_value = 0
-        self.valid_moves = []
+# Define the track for each color
+paths = {
+    'red': [(12, 2), (11, 2), (10, 2), (9, 2), (8, 2), (7, 2), (6, 2), (5, 2), (4, 2), (3, 2), (2, 2), 
+            (2, 3), (2, 4), (3, 4), (4, 4), (5, 4), (6, 4), (7, 4), (8, 4), (9, 4), (10, 4), (11, 4), (12, 4)],
+    'blue': [(12, 12), (11, 12), (10, 12), (9, 12), (8, 12), (7, 12), (6, 12), (5, 12), (4, 12), (3, 12), (2, 12), 
+            (2, 13), (2, 14), (3, 14), (4, 14), (5, 14), (6, 14), (7, 14), (8, 14), (9, 14), (10, 14), (11, 14), (12, 14)],
+    'green': [(2, 2), (3, 2), (4, 2), (5, 2), (6, 2), (7, 2), (8, 2), (9, 2), (10, 2), (11, 2), (12, 2),
+              (12, 3), (12, 4), (11, 4), (10, 4), (9, 4), (8, 4), (7, 4), (6, 4), (5, 4), (4, 4), (3, 4), (2, 4)],
+    'yellow': [(2, 12), (3, 12), (4, 12), (5, 12), (6, 12), (7, 12), (8, 12), (9, 12), (10, 12), (11, 12), (12, 12),
+               (12, 13), (12, 14), (11, 14), (10, 14), (9, 14), (8, 14), (7, 14), (6, 14), (5, 14), (4, 14), (3, 14), (2, 14)]
+}
 
-    def create_grid(self):
-        """Create the Ludo grid layout."""
-        grid = []
-        for i in range(15):  # 15x15 grid
-            row = []
-            for j in range(15):
-                row.append((i, j))
-            grid.append(row)
-        return grid
+def move(dice, currentPlayer):
+    global piece_positions
+    color = currentPlayer
+    piece = int(input(f"Which piece of {color} would you like to move (1-4)? ")) - 1
+    
+    current_pos = piece_positions[color][piece]
+    path = paths[color]
+    current_index = path.index(current_pos)
+    new_index = current_index + dice
+    
+    if new_index >= len(path):
+        print("Move exceeds the track length. Try a different piece or wait for next turn.")
+        return
+    
+    new_pos = path[new_index]
 
-    def draw_board(self):
-        """Draw the Ludo board on the canvas."""
-        cell_size = 40
-        for i, row in enumerate(self.grid):
-            for j, cell in enumerate(row):
-                x1, y1 = j * cell_size, i * cell_size
-                x2, y2 = x1 + cell_size, y1 + cell_size
-                self.canvas.create_rectangle(x1, y1, x2, y2, fill='white', outline='black')
+    if is_valid_move(new_pos, color):
+        board[current_pos[0]][current_pos[1]] = '.'  # Clear old position
+        if board[new_pos[0]][new_pos[1]] == '.':
+            piece_positions[color][piece] = new_pos  # Move to new position
+            board[new_pos[0]][new_pos[1]] = color[0]  # Update board with new position
+        else:
+            # Check if it's an enemy piece and remove it
+            enemy_color = get_piece_color(board[new_pos[0]][new_pos[1]])
+            if enemy_color != color:
+                if board[new_pos[0]][new_pos[1]].islower():
+                    losePiece(enemy_color)
+                    piece_positions[color][piece] = new_pos  # Move to new position
+                    board[new_pos[0]][new_pos[1]] = color[0]  # Update board with new position
+                else:
+                    print("Cannot move to a protected enemy's piece")
+            else:
+                # It's a same-color piece
+                if board[new_pos[0]][new_pos[1]].islower():
+                    board[new_pos[0]][new_pos[1]] = board[new_pos[0]][new_pos[1]].upper()
+                print("Your piece is now protected!")
+    else:
+        print("Invalid move.")
 
-        # Safe zones and home areas
-        self.canvas.create_rectangle(0, 0, 6 * cell_size, 6 * cell_size, fill='red')  # Red home
-        self.canvas.create_rectangle(9 * cell_size, 0, 15 * cell_size, 6 * cell_size, fill='blue')  # Blue home
-        self.canvas.create_rectangle(0, 9 * cell_size, 6 * cell_size, 15 * cell_size, fill='green')  # Green home
-        self.canvas.create_rectangle(9 * cell_size, 9 * cell_size, 15 * cell_size, 15 * cell_size, fill='yellow')  # Yellow home
+def calculate_new_position(current_pos, dice):
+    # For Ludo, this function is now embedded in the move logic using paths
+    pass
 
-        # Central safe zone
-        self.canvas.create_rectangle(6 * cell_size, 6 * cell_size, 9 * cell_size, 9 * cell_size, fill='gray')
+def is_valid_move(new_pos, color):
+    # Add custom game rules for checking validity
+    if new_pos[0] < 0 or new_pos[1] < 0 or new_pos[0] >= len(board) or new_pos[1] >= len(board[0]):
+        return False
+    return True
 
-    def create_paths(self):
-        """Define movement paths for each player."""
-        paths = {
-            'red': [(6, i) for i in range(5, -1, -1)] + [(i, 0) for i in range(6, 15)] + [(14, i) for i in range(1, 6)] + [(i, 5) for i in range(14, 6, -1)] + [(7, 6), (7, 7), (6, 7)],
-            'blue': [(i, 8) for i in range(0, 6)] + [(6, i) for i in range(6, 15)] + [(7, 14), (8, 14)] + [(i, 13) for i in range(8, 15)] + [(14, i) for i in range(14, 8, -1)] + [(13, 8), (12, 8)],
-            'green': [(8, i) for i in range(14, 8, -1)] + [(i, 8) for i in range(14, 6, -1)] + [(7, 7), (7, 6)] + [(i, 5) for i in range(6, -1, -1)] + [(0, i) for i in range(6, 14)] + [(1, 14), (2, 14)],
-            'yellow': [(8, i) for i in range(6, 15)] + [(i, 14) for i in range(6, -1, -1)] + [(0, i) for i in range(14, 8, -1)] + [(1, 8), (2, 8)] + [(i, 7) for i in range(2, 6)] + [(6, 6), (6, 7)],
-        }
-        return paths
+def get_piece_color(piece):
+    for color in players.keys():
+        if piece.lower() == color[0]:
+            return color
+    return None
 
-    def init_pieces(self):
-        """Initialize player pieces."""
-        pieces = {}
-        positions = {
-            'red': [(1, 1), (1, 2), (2, 1), (2, 2)],
-            'blue': [(10, 1), (10, 2), (11, 1), (11, 2)],
-            'green': [(1, 10), (1, 11), (2, 10), (2, 11)],
-            'yellow': [(10, 10), (10, 11), (11, 10), (11, 11)]
-        }
+# Initialize game and board setup as before
+def main():
+    global players, board, piece_positions
+    players = setPlayers()
+    board = createBoard()
+    currentPlayer = list(players.keys())[np.random.randint(0, len(list(players.keys())))]
+    piece_positions = {
+        'green': [(2, 2), (2, 4), (4, 2), (4, 4)],
+        'yellow': [(2, 12), (2, 14), (4, 12), (4, 14)],
+        'red': [(12, 2), (12, 4), (14, 2), (14, 4)],
+        'blue': [(12, 12), (12, 14), (14, 12), (14, 14)]
+    }
+    placePlayers(players, board)
+    showBoard(board)
+    
+    for i in range(12):  # Testing loop, can be changed to a while loop for the actual game
+        dice = np.random.randint(1, 7)
+        print(currentPlayer, 'rolled a', dice, end='! ')
+        while dice == 6:
+            print(currentPlayer, 'goes again and rolls a', end=' ')
+            dice = np.random.randint(1, 7)
+            print(dice)
 
-        cell_size = 40
-        for player, coords in positions.items():
-            pieces[player] = []
-            for (row, col) in coords:
-                x1, y1 = col * cell_size + 5, row * cell_size + 5
-                x2, y2 = x1 + 30, y1 + 30
-                piece = self.canvas.create_oval(x1, y1, x2, y2, fill=player, tags=player)
-                pieces[player].append(piece)
-                self.positions[player][piece] = (row, col)  # Track initial positions
-        return pieces
+        move(dice, currentPlayer)
+        currentPlayer = nextTurn(currentPlayer)
+        print(currentPlayer, 'its your turn now')
+        showBoard(board)
 
-    def roll_dice(self):
-        """Simulate a dice roll and update turn display."""
-        self.dice_value = random.randint(1, 6)
-        self.dice_label.config(text=f"Dice Roll: {self.dice_value}")
-        self.turn_label.config(text=f"{self.players[self.current_player_index]}'s Turn")
-        self.valid_moves = self.calculate_valid_moves()
-
-    def calculate_valid_moves(self):
-        """Calculate valid moves for the current player's pieces."""
-        player = self.players[self.current_player_index]
-        valid_moves = []
-        path = self.paths[player]
-
-        for piece, position in self.positions[player].items():
-            if position in path:
-                current_index = path.index(position)
-                new_index = current_index + self.dice_value
-                if new_index < len(path):
-                    valid_moves.append((piece, path[new_index]))
-        return valid_moves
-
-    def move_piece(self, piece):
-        """Move a piece if it is a valid move."""
-        if self.dice_value == 0 or not self.valid_moves:
-            return  # Cannot move without rolling the dice
-
-        player = self.players[self.current_player_index]
-        for valid_piece, new_position in self.valid_moves:
-            if valid_piece == piece:
-                self.positions[player][piece] = new_position
-                self.update_piece_position(piece, new_position)
-                self.end_turn()
-                return
-
-    def update_piece_position(self, piece, position):
-        """Update the piece's position on the canvas."""
-        row, col = position
-        x1, y1 = col * 40 + 5, row * 40 + 5
-        x2, y2 = x1 + 30, y1 + 30
-        self.canvas.coords(piece, x1, y1, x2, y2)
-
-    def end_turn(self):
-        """End the current player's turn and switch to the next player."""
-        self.current_player_index = (self.current_player_index + 1) % len(self.players)
-        self.dice_value = 0
-        self.turn_label.config(text=f"{self.players[self.current_player_index]}'s Turn")
-
-# Run the game
 if __name__ == "__main__":
-    root = tk.Tk()
-    game = LudoGame(root)
-    root.mainloop()
+    main()
