@@ -77,16 +77,21 @@ def placePlayers(players, board: list):
         for i in range(len(players[color])):
             board[placements[color][i][0]][placements[color][i][1]] = placements[color][-1]
 
-def move(dice, currentPlayer):
-    pass
+def move(dice, currentPlayer, currentPos):
+    track = [(7, 2), (7, 3), (7, 4), (7, 5), (7, 6), (6, 7), (5, 7), (4, 7), (3, 7), (2, 7), (1, 7), (0, 7), (0, 8), (0, 9), (1, 9), 
+             (2, 9), (3, 9), (4, 9), (5, 9), (6, 9), (7,10), (7,11), (7,12), (7,13), (7,14), (7,15), (7,16), (8,16), (9,16), (9,15),
+             (9,14), (9,13), (9,12), (9,11), (9,10), (10,9), (11,9), (12,9), (13,9), (14,9), (15,9), (16,9), (16,8), (16,7), (15,7),
+             (14,7), (13,7), (12,7), (11,7), (10,7), (9, 6), (9, 5), (9, 4), (9, 3), (9, 2), (9, 1), (9, 0), (8, 0), (7, 0), (7, 1)]
+    
 
 def main():
-    global players
+    global players, board
     winner = None
     players = setPlayers()
     board = createBoard()
     currentPlayer = list(players.keys())[np.random.randint(0,len(list(players.keys())))]
     placePlayers(players, board)
+    board[7][2]= 'g'
     showBoard(board)
     for i in range(12):#testing, will turn this into a while not winner when game movement works
         dice = np.random.randint(1, 7)
