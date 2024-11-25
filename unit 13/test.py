@@ -127,70 +127,74 @@ def move(dice, currentPlayer):
     piece = int(input(f"Which piece of {color} would you like to move (1-4)? ")) - 1
 
     current_pos = piece_positions[color][piece]
-    
+
     try:
         if current_pos in home_lanes[color]:
             # If the piece is already in the home lane
-            current_index = len(track) + home_lanes[color].index(current_pos)
+            home_index = home_lanes[color].index(current_pos)
+            steps_to_home = len(home_lanes[color]) - 1 - home_index  # Steps to home
+
+            if dice != steps_to_home:
+                print(f"Cannot move. You need an exact roll of {steps_to_home} to reach home.")
+                return
+            else:
+                new_pos = home_lanes[color][home_index + dice]
+                pieces_home[color] += 1
         else:
+            # Regular track logic
             current_index = track.index(current_pos)
-    except ValueError:
-        print("Invalid move. The piece is not on the track.")
-        return
+            new_index = current_index + dice
 
-    new_index = current_index + dice
-    home_entry = track.index(starting_positions[color])  # Position on the track where home entry starts
+            home_entry = track.index(starting_positions[color])  # Position to enter home lane
 
-    # Check if the piece should move into the home lane
-    if current_index < home_entry and new_index >= home_entry:
-        home_move = new_index - home_entry
-        if home_move < len(home_lanes[color]):
-            new_pos = home_lanes[color][home_move]
-        else:
-            required_roll = home_entry + len(home_lanes[color]) - new_index
-            print(f"You need an exact roll of {required_roll} to enter the home lane.")
+            if current_index < home_entry and new_index >= home_entry:
+                # Entering the home lane
+                home_move = new_index - home_entry
+                if home_move < len(home_lanes[color]):
+                    new_pos = home_lanes[color][home_move]
+                else:
+                    required_roll = len(home_lanes[color]) - home_move
+                    print(f"You need an exact roll of {required_roll} to enter the home lane.")
+                    return
+            elif new_index >= len(track):
+                # Wrapping around the track
+                new_index -= len(track)
+                new_pos = track[new_index]
+            else:
+                # Regular track movement
+                new_pos = track[new_index]
+
+        # Ensure the piece doesn't move into another player's home lane
+        if new_pos in [home for home_color in home_lanes.keys() if home_color != color for home in home_lanes[home_color]]:
+            print("You cannot move into another player's home lane.")
             return
-    elif new_index >= len(track):  # Wrap around the track
-        new_index -= len(track)
-        new_pos = track[new_index]
-    else:
-        new_pos = track[new_index]
-
-    # Ensure the piece doesn't move into another player's home lane
-    if new_pos in [home for home_color in home_lanes.keys() if home_color != color for home in home_lanes[home_color]]:
-        print("You cannot move into another player's home lane.")
-        return
-
-    if is_valid_move(new_pos, color):
-        board[current_pos[0]][current_pos[1]] = '.'  # Remove the piece from its current position
-        piece_positions[color][piece] = new_pos
-
-        if board[new_pos[0]][new_pos[1]] == '.':
-            board[new_pos[0]][new_pos[1]] = color[0]  # Update board with new position
-        else:
-            enemy_color = get_piece_color(board[new_pos[0]][new_pos[1]])
-            if enemy_color == 'home_lane':
-                piece_positions[color][piece] = new_pos
-                board[new_pos[0]][new_pos[1]] = color[0]
-            elif enemy_color != color:
-                if board[new_pos[0]][new_pos[1]].islower():
+#fix the board display problem here/////////////
+        # Validate and make the move
+        if is_valid_move(new_pos, color):
+            if board[new_pos[0]][new_pos[1]] == '.':
+                board[current_pos[0]][current_pos[1]] = '.' 
+            elif board[new_pos[0]][new_pos[1]] == '□':  # Clear the old position
+                board[current_pos[0]][current_pos[1]] = '□' 
+            piece_positions[color][piece] = new_pos
+#fix the player dislay problem here/////////////
+            if board[new_pos[0]][new_pos[1]] == '.' or board[new_pos[0]][new_pos[1]] == '□':
+                if board[new_pos[0]][new_pos[1]] == '□':
+                    board[new_pos[0]][new_pos[1]] = pieces_home[color]
+                elif board[new_pos[0]][new_pos[1]] == '.':
+                    board[new_pos[0]][new_pos[1]] = '.'
+                board[new_pos[0]][new_pos[1]] = color[0]  # Update board with new position
+            else:
+                enemy_color = get_piece_color(board[new_pos[0]][new_pos[1]])
+                if enemy_color and enemy_color != color:
                     losePiece(enemy_color)  # Capture the enemy piece
                     piece_positions[color][piece] = new_pos
                     board[new_pos[0]][new_pos[1]] = color[0]
                 else:
-                    print("Cannot move to a protected enemy's piece.")
-                    piece_positions[color][piece] = current_pos
-                    board[current_pos[0]][current_pos[1]] = color[0]
-            else:
-                if board[new_pos[0]][new_pos[1]].islower():
-                    board[new_pos[0]][new_pos[1]] = board[new_pos[0]][new_pos[1]].upper()
-                    print("Your piece is now protected!")
-                else:
-                    print("Cannot move to a protected enemy's piece.")
-                    piece_positions[color][piece] = current_pos
-                    board[current_pos[0]][current_pos[1]] = color[0]
-    else:
-        print("Invalid move.")
+                    print("A piece is already in this position.")
+        else:
+            print("Invalid move.")
+    except ValueError:
+        print("Invalid move. The piece is not on the track.")
 
 def is_valid_move(new_pos, color):
     if new_pos[0] < 0 or new_pos[1] < 0 or new_pos[0] >= len(board) or new_pos[1] >= len(board[0]):
@@ -199,6 +203,10 @@ def is_valid_move(new_pos, color):
 
 def losePiece(color: str):
     global players
+    if color not in players:
+        print("Invalid enemy piece. No piece to lose.")
+        return
+
     if len(players[color]) > 0:
         players[color].pop()
         print(f'{color.capitalize()} player now has {len(players[color])} pieces left')
@@ -216,18 +224,22 @@ def losePiece(color: str):
                 break
 
 def get_piece_color(piece):
+    # Check if the board position is marked as a home lane (□)
     if piece == '□':
-        return 'home_lane'  # Return a specific indicator for home lanes
+        return None  # Return None instead of 'home_lane'
     for color in players.keys():
         if piece.lower() == color[0]:
             return color
     return None
 
+
 def main():
-    global players, board, piece_positions
+    global players, board, piece_positions, pieces_home
     winning = None
 
     players = setPlayers()
+    pieces_home = players
+    pieces_home = {color: 0 for color in players}
     board = createBoard()
     currentPlayer = list(players.keys())[np.random.randint(0, len(list(players.keys())))]
     
@@ -252,6 +264,11 @@ def main():
         
         move(total_dice, currentPlayer)
         currentPlayer = nextTurn(currentPlayer)
+        if all(pos is None for pos in piece_positions[currentPlayer]):
+            print(f"{currentPlayer.capitalize()} has won the game!")
+            winning = currentPlayer
+            break
+
         print(currentPlayer, 'its your turn now')
         showBoard(board)
 
