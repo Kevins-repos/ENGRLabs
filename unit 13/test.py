@@ -263,6 +263,11 @@ def remove_starting_piece(color, piece):
 def main():
     global players, board, piece_positions, pieces_home
     winning = None
+    try:
+        movements = open('unit 13/gameHistory.txt', 'x+', encoding='utf-8')
+    except FileExistsError:#new game so new contents
+        movements = open('unit 13/gameHistory.txt', 'r+', encoding='utf-8')
+        movements.truncate()
 
     players = setPlayers()
     pieces_home = players
@@ -294,10 +299,19 @@ def main():
         if all(pos is None for pos in piece_positions[currentPlayer]) or pieces_home[currentPlayer] == 4:
             print(f"{currentPlayer.capitalize()} has won the game!")
             winning = currentPlayer
+            movements.close()
             break
 
         print(currentPlayer, 'its your turn now')
         showBoard(board)
+        for i in board:
+            movements.write(str(i)+'\n')
+        movements.write(f'Active players and pieces: {players}')
+        movements.write(f'\nDice rolled: ({dice}) for player ({currentPlayer})')
+        movements.write(f'\nAll active and inactive piece positions:{piece_positions}')
+        movements.write(f'\nPieces players have managed to get home: {pieces_home}\n')
+#        movements.close() # More testing purposes code
+
 
 if __name__ == "__main__":
     main()
