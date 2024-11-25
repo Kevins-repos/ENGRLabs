@@ -52,14 +52,14 @@ def createBoard():
     return board
 
 def showBoard(board):
-    print('O - - - - - - - - - - - - - - - - - O')
+    print('+ — — — — — — — — — — — — — — — — — +')
     for row in board:
         print('|', end=' ')
         for char in row:
             print(char, end=' ')
         print('|', end=' ')
         print()
-    print('O - - - - - - - - - - - - - - - - - O')
+    print('+ — — — — — — — — — — — — — — — — — +')
 
 def placePlayers(players, board: list):
     placements = {'green': [(2, 2), (2, 4), (4, 2), (4, 4), 'g'],
@@ -122,10 +122,12 @@ def createBoard():
     return board
 
 def move(dice, currentPlayer):
-    global piece_positions
+    global piece_positions, pieces_home, players
     color = currentPlayer
-    piece = int(input(f"Which piece of {color} would you like to move (1-4)? ")) - 1
-
+    try:
+        piece = int(input(f"Which piece of {color} would you like to move (1-4)? ")) - 1
+    except ValueError:
+        piece = int(input(f"Enter a number between 1 to 4 inclusive!: ")) - 1
     current_pos = piece_positions[color][piece]
 
     try:
@@ -134,14 +136,24 @@ def move(dice, currentPlayer):
             home_index = home_lanes[color].index(current_pos)
             steps_to_home = len(home_lanes[color]) - 1 - home_index  # Steps to home
 
-            if dice != steps_to_home:
+            if dice != steps_to_home and steps_to_home != 0:
                 print(f"Cannot move. You need an exact roll of {steps_to_home} to reach home.")
                 return
             else:
-                new_pos = home_lanes[color][home_index + dice]
+                new_pos = home_lanes[color][home_index + dice] if home_index + dice < len(home_lanes[color]) else home_lanes[color][-1]
                 pieces_home[color] += 1
+                piece_positions[color][piece] = None  # Piece has reached home
+
+                # Clear the piece from the board since it's home
+                board[current_pos[0]][current_pos[1]] = '□'
+                board[new_pos[0]][new_pos[1]] = pieces_home[color]
+                
+                # Remove the piece from the players dictionary
+                print(players[color].pop(piece), 'made it home and has been removed')
+                return  # No further updates for this piece
         else:
             # Regular track logic
+            home_index = None
             current_index = track.index(current_pos)
             new_index = current_index + dice
 
@@ -168,21 +180,24 @@ def move(dice, currentPlayer):
         if new_pos in [home for home_color in home_lanes.keys() if home_color != color for home in home_lanes[home_color]]:
             print("You cannot move into another player's home lane.")
             return
-#fix the board display problem here/////////////
+
         # Validate and make the move
-        if is_valid_move(new_pos, color):
-            if board[new_pos[0]][new_pos[1]] == '.':
+        if is_valid_move(new_pos):
+            if home_index:
+                board[current_pos[0]][current_pos[1]] = '□'
+            else:
                 board[current_pos[0]][current_pos[1]] = '.' 
-            elif board[new_pos[0]][new_pos[1]] == '□':  # Clear the old position
-                board[current_pos[0]][current_pos[1]] = '□' 
+            
+            # Remove the starting piece
+            remove_starting_piece(color, piece)
+            
             piece_positions[color][piece] = new_pos
-#fix the player dislay problem here/////////////
+
             if board[new_pos[0]][new_pos[1]] == '.' or board[new_pos[0]][new_pos[1]] == '□':
-                if board[new_pos[0]][new_pos[1]] == '□':
+                if board[new_pos[0]][new_pos[1]] == '□' and home_index:
                     board[new_pos[0]][new_pos[1]] = pieces_home[color]
-                elif board[new_pos[0]][new_pos[1]] == '.':
-                    board[new_pos[0]][new_pos[1]] = '.'
-                board[new_pos[0]][new_pos[1]] = color[0]  # Update board with new position
+                else:    
+                    board[new_pos[0]][new_pos[1]] = color[0]  # Update board with new position
             else:
                 enemy_color = get_piece_color(board[new_pos[0]][new_pos[1]])
                 if enemy_color and enemy_color != color:
@@ -196,7 +211,7 @@ def move(dice, currentPlayer):
     except ValueError:
         print("Invalid move. The piece is not on the track.")
 
-def is_valid_move(new_pos, color):
+def is_valid_move(new_pos):
     if new_pos[0] < 0 or new_pos[1] < 0 or new_pos[0] >= len(board) or new_pos[1] >= len(board[0]):
         return False
     return True
@@ -232,6 +247,18 @@ def get_piece_color(piece):
             return color
     return None
 
+def remove_starting_piece(color, piece):
+    global board
+    starting_positions_map = {
+        'red': [(12, 2), (12, 4), (14, 2), (14, 4)],
+        'blue': [(12, 12), (12, 14), (14, 12), (14, 14)],
+        'green': [(2, 2), (2, 4), (4, 2), (4, 4)],
+        'yellow': [(2, 12), (2, 14), (4, 12), (4, 14)]
+    }
+    start_pos = starting_positions_map[color][piece]
+    if board[start_pos[0]][start_pos[1]] == color[0]:
+        board[start_pos[0]][start_pos[1]] = '.'
+
 
 def main():
     global players, board, piece_positions, pieces_home
@@ -264,7 +291,7 @@ def main():
         
         move(total_dice, currentPlayer)
         currentPlayer = nextTurn(currentPlayer)
-        if all(pos is None for pos in piece_positions[currentPlayer]):
+        if all(pos is None for pos in piece_positions[currentPlayer]) or pieces_home[currentPlayer] == 4:
             print(f"{currentPlayer.capitalize()} has won the game!")
             winning = currentPlayer
             break
